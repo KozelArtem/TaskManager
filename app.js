@@ -5,16 +5,38 @@ const logger = require('morgan');
 
 const tagsRouter = require('./routes/tags');
 const tasksRouter = require('./routes/tasks');
+const usersRouter = require('./routes/users');
+
 
 const app = express();
+require('./authentication/init')(app)
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({
+    extended: false
+}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/tags', tagsRouter);
 app.use('/tasks', tasksRouter);
+app.use('/users', usersRouter);
+
+// catch 404 and forward to error handler
+app.use(function (req, res, next) {
+    next(createError(404));
+  });
+
+// error handler
+app.use(function (err, req, res, next) {
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+    res.status(err.status || 500).send({
+        errors: err.message
+    });
+});
 
 module.exports = app;

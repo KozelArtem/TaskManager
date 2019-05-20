@@ -1,0 +1,10 @@
+{
+    "userPasswordSaltRounds": 12,
+    "session": {
+        "secret": "secret",
+        "cookie": {},
+        "resave": true,
+        "saveUninitialized": true
+
+    }
+}
