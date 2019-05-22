@@ -44,7 +44,8 @@ DELETE | ``` /tags/:id ``` | message | -
 | Method | Path | Return| Input|
 |--------|------|-------------|------------|
 GET | ``` /tasks ``` | task[] | -
-GET | ``` /tasks /:id ``` | task | - 
-PUT |``` /tasks /:id ``` |  task | name, description
-POST | ``` /tasks /:id ``` | message | name and(or) description
-DELETE | ``` /tasks /:id ``` | message | -
+GET | ``` /tasks/:id ``` | task | - 
+PUT |``` /tasks/:id ``` |  task | name, description
+POST | ``` /tasks/:id ``` | message | name and(or) description
+DELETE | ``` /tasks/:id ``` | message | -
+

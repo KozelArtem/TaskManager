@@ -1,34 +1,22 @@
 const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
+const JwtStrategy = require('passport-jwt').Strategy;
+const ExtractJwt = require('passport-jwt').ExtractJwt;
 
+const passportConfig = require('../config/passport.json');
 const models = require('../models');
-const Op = models.Sequelize.Op;
-passport.use(new LocalStrategy({
-    usernameField: 'username',
-    passwordField: 'password'
-}, (username, password, done) => {
-    models.User.findOne({
-            where: {
-                [Op.or]: [{
-                    username: username
-                }, {
-                    email: username
-                }]
-            }
-        })
+
+passport.use(new JwtStrategy({
+    secretOrKey: passportConfig.secret,
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
+}, (jwt_payload, next) => {
+    models.User.findByPk(jwt_payload.id)
         .then(user => {
-            if (!user) {
-                return done({
-                    status: 404,
-                    message: 'User not found'
-                }, false);
-            }
-            return done(null, user);
+            return next(null, user);
         })
         .catch(err => {
-            done(err, false);
+            next(err, false);
         });
-}));
+}))
 
 passport.serializeUser((user, done) => {
     done(null, user.id);
