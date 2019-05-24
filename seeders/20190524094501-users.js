@@ -11,8 +11,6 @@ module.exports = {
       lastName: 'Surname',
       activation: 'activationCode',
       status: true,
-      createdAt: new Date(Date.now()),
-      updatedAt: new Date(Date.now()),
     }], {});
   },
 
