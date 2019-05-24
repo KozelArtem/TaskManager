@@ -52,7 +52,7 @@ module.exports = {
             })
             .then(result => {
                 res.status(200).send({
-                    message: 'Task was deleted'
+                    message: 'Task was updated'
                 });
             })
             .catch(err => {
@@ -66,30 +66,16 @@ module.exports = {
                     id: req.params.id
                 }
             })
-            .then(() => {
+            .then((data) => {
+                if (data === 0) {
+                    return next({
+                        status: 400,
+                        message: 'Can not find task with id: ' + req.params.id
+                    })
+                }
                 res.status(200).send({
                     message: 'Task was deleted'
                 });
-            })
-            .catch(err => {
-                next(err);
-            });
-    },
-
-    getUserTasks: (req, res, next) => {
-        models.Task.findOne({
-                where: {
-                    userId: req.user.id
-                }
-            })
-            .then(tasks => {
-                if (!tasks) {
-                    return next({
-                        status: 404,
-                        message: 'No tasks'
-                    })
-                }
-                res.status(200).send(tasks);
             })
             .catch(err => {
                 next(err);

@@ -52,7 +52,15 @@ module.exports = {
         }
         modelsHelper.createUserFromRequest(req)
             .then(user => {
-                return res.status(200).send(user.email);
+                return res.status(200).send(
+                    {
+                        id: user.id,
+                        username: user.username,
+                        email: user.email,
+                        firstName: user.firstName,
+                        lastName: user.lastName
+                    }
+                );
             })
             .catch(err => {
                 next(err);
