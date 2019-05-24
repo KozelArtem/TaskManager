@@ -4,15 +4,12 @@ var router = express.Router();
 const tagsRouter = require('./tags');
 const tasksRouter = require('./tasks');
 const userRouter = require('./user');
+const authRouter = require('./auth');
 
 router.use('/tags', tagsRouter);
 router.use('/tasks', tasksRouter);
 router.use('/user', userRouter);
-
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  
-});
+router.use('/auth', authRouter);
 
 
 module.exports = router;
