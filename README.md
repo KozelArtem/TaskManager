@@ -4,48 +4,20 @@ Simple task manager with tags
 ## Usage
 	npm install
 	npm start
-## Migrations
+## Database
 **To create database**
-```	npx sequelize db:create ```
+```npx sequelize db:create```
 
 **To up migrations**
-```	npx sequelize db:migrate ```
+```npx sequelize db:migrate```
 
 **To down migrations**
-``` npx sequelize db:migrate:undo:all ```
+```npx sequelize db:migrate:undo:all```
+
+**To create example database**
+```npx sequelize db:seed:undo:all```
+
+**To clear database**
+```npx sequelize db:seed:all:undo```
 ## API 
-### Model tag
-```
-{
-	id: int
-	name: string,
-	createdAt: Date,
-	updateAt: Date
-} 
-```
-| Method | Path | Return| Input|
-|--------|------|-------------|------------|
-GET | ``` /tags ``` | tag[] | -
-GET | ``` /tags/:id ``` | tag | - 
-PUT | ``` /tags/:id ``` |  tag | name
-POST | ``` /tags/:id ``` | message | name
-DELETE | ``` /tags/:id ``` | message | -
-
-### Model task
-```
-{
-	id: int
-	name: string,
-	description: string
-	createdAt: Date,
-	updateAt: Date
-} 
-```
-| Method | Path | Return| Input|
-|--------|------|-------------|------------|
-GET | ``` /tasks ``` | task[] | -
-GET | ``` /tasks/:id ``` | task | - 
-PUT |``` /tasks/:id ``` |  task | name, description
-POST | ``` /tasks/:id ``` | message | name and(or) description
-DELETE | ``` /tasks/:id ``` | message | -
-
+[Postman docs](https://documenter.getpostman.com/view/7637760/S1TR4zLm?version=latest)
