@@ -2,7 +2,11 @@
 # Task manager
 Simple task manager with tags
 ## Usage
+**Configure email account** 
+```config/nodemailer.json```
+**Instal all dependencies**
 	npm install
+**Start app**
 	npm start
 ## Database
 **To create database**
