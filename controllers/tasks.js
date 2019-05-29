@@ -6,8 +6,12 @@ module.exports = {
         models.Task.findByPk(req.params.id, {
                 include: [{
                     model: models.Tag,
-                    as: 'tags'
-                }],
+                    as: 'tags',
+                    attributes: ["id", "name"],
+                    through: {
+                        attributes: []
+                    }
+                }]
             })
             .then(task => {
                 if (!task) {
@@ -23,14 +27,18 @@ module.exports = {
             });
     },
 
-    getUserTasks: (req, res, next) => {
+    list: (req, res, next) => {
         models.Task.findAll({
                 where: {
                     userId: req.user.id
                 },
                 include: [{
                     model: models.Tag,
-                    as: 'tags'
+                    as: 'tags',
+                    attributes: ["id", "name"],
+                    through: {
+                        attributes: []
+                    }
                 }]
             })
             .then(tasks => {
@@ -51,7 +59,7 @@ module.exports = {
             });
     },
 
-    updateById: (req, res, next) => {
+    update: (req, res, next) => {
         modelsHelper.updateTaskFromRequest(req)
             .then(result => {
                 res.status(200).send({
@@ -64,7 +72,7 @@ module.exports = {
 
     },
 
-    removeById: (req, res, next) => {
+    remove: (req, res, next) => {
         models.Task.destroy({
                 where: {
                     id: req.params.id
@@ -85,4 +93,54 @@ module.exports = {
                 next(err);
             });
     },
+
+    complete: (req, res, next) => {
+        models.Task.findByPk(req.params.id)
+            .then(task => {
+                if (!task) {
+                    return next({
+                        message: `Can not find task with id: ${req.parmas.id}`,
+                        status: 400
+                    });
+                }
+                if (task.completed) {
+                    return next({
+                        message: `Task already completed`,
+                        status: 400
+                    });
+                }
+                task.completed = true;
+                task.completedAt = new Date();
+                task.save()
+                    .then(() => {
+                        return res.status(200).send({
+                            message: 'Task completed'
+                        });
+                    })
+                    .catch(err => {
+                        next(err);
+                    })
+            })
+            .catch(err => {
+                next(err);
+            })
+    },
+
+    completedList: (req, res, next) => {
+        models.Task.findAll({
+                where: {
+                    completed: true
+                },
+                include: [{
+                    model: models.Tag,
+                    as: 'tags'
+                }]
+            })
+            .then(tasks => {
+                res.status(200).send(tasks);
+            })
+            .catch(err => {
+                next(err);
+            });
+    }
 }

@@ -4,8 +4,13 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     description: DataTypes.STRING,
     userId: DataTypes.INTEGER,
+    completed: DataTypes.BOOLEAN,
+    completedAt: DataTypes.DATE
   }, {});
   Task.associate = function (models) {
+    Task.beforeCreate(async (task, options) => {
+      task.completed = false;
+    });
     Task.belongsToMany(models.Tag, {
       through: 'TaskTag',
       as: 'tags',
