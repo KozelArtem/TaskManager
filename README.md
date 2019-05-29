@@ -19,7 +19,7 @@ Simple task manager with tags
 ```npx sequelize db:migrate:undo:all```
 
 **To create example database**
-```npx sequelize db:seed:undo:all```
+```npx sequelize db:seed:all```
 
 **To clear database**
 ```npx sequelize db:seed:all:undo```
