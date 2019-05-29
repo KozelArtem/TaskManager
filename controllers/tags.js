@@ -1,65 +1,45 @@
+const models = require('../models');
+
 module.exports = {
-    getById: (req, res, next) => {
-        models.Tag.findByPk(req.params.id).then(tag => {
-            if (!tag) {
-                return next({
-                    status: 500,
-                    message: 'Can not find tag with id ' + req.params.id
-                })
-            }
-            res.status(200).send(tag);
-        }).catch(err => {
-            next(err);
-        });
+    getById: (id) => {
+        return models.Tag.findByPk(id);
     },
 
-    getAll: (req, res, next) => {
-        models.Tag.findAll().then(tags => {
-            res.status(200).send(tags);
-        }).catch(err => {
-            next(err);
-        })
+    getAll: () => {
+        return models.Tag.findAll();
     },
 
-    create: (req, res, next) => {
-        models.Tag.create({
-            name: req.body.name,
-        }).then(tag => {
-            res.status(201).send(tag);
-        }).catch(err => {
-            next(err);
-        });
-    },
-
-
-
-    updateById: (req, res, next) => {
-        const tag = {};
-        req.body.name ? tag.name = req.body.name : '';
-        models.Tag.update(tag, {
+    findByCriteria: (criteria) => {
+        return models.Tag.findOne({
             where: {
-                id: req.params.id
+                criteria
             }
-        }).then(result => {
-            res.status(200).send({
-                message: 'Tag was deleted'
-            });
-        }).catch(err => {
-            next(err);
         });
     },
 
-    removeById: (req, res, next) => {
-        models.Tag.destroy({
+    create: (name) => {
+        return models.Tag.create({
+            name
+        });
+    },
+
+    updateById: (id, name) => {
+        const tag = {
+            id,
+            name
+        };
+        return models.Tag.update(tag, {
             where: {
-                id: req.params.id
+                id
             }
-        }).then(() => {
-            res.status(200).send({
-                message: 'Tag was deleted'
-            });
-        }).catch(err => {
-            next(err);
+        });
+    },
+
+    removeById: (id) => {
+        return models.Tag.destroy({
+            where: {
+                id
+            }
         });
     }
 

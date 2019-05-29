@@ -11,29 +11,4 @@ module.exports = {
             lastName: req.user.lastName
         });
     },
-
-    userTask: (req, res, next) => {
-        taskController.getById(req,res,next);
-    },
-
-    
-    userTasks: (req, res, next) => {
-        models.Task.findAll({
-                where: {
-                    userId: req.user.id
-                }
-            })
-            .then(tasks => {
-                if (!tasks) {
-                    return next({
-                        status: 404,
-                        message: 'No tasks'
-                    });
-                }
-                res.status(200).send(tasks);
-            })
-            .catch(err => {
-                next(err);
-            });
-    },
 }

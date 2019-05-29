@@ -1,8 +1,14 @@
+const modelsHelper = require('../utils/modelsHelper');
 const models = require('../models');
 
 module.exports = {
     getById: (req, res, next) => {
-        models.Task.findByPk(req.params.id)
+        models.Task.findByPk(req.params.id, {
+                include: [{
+                    model: models.Tag,
+                    as: 'tags'
+                }],
+            })
             .then(task => {
                 if (!task) {
                     return next({
@@ -17,8 +23,16 @@ module.exports = {
             });
     },
 
-    getAll: (req, res, next) => {
-        models.Task.findAll()
+    getUserTasks: (req, res, next) => {
+        models.Task.findAll({
+                where: {
+                    userId: req.user.id
+                },
+                include: [{
+                    model: models.Tag,
+                    as: 'tags'
+                }]
+            })
             .then(tasks => {
                 res.status(200).send(tasks);
             })
@@ -28,11 +42,7 @@ module.exports = {
     },
 
     create: (req, res, next) => {
-        models.Task.create({
-                name: req.body.name,
-                description: req.body.description,
-                userId: req.user.id
-            })
+        modelsHelper.createTaskFromRequest(req)
             .then(task => {
                 res.status(201).send(task);
             })
@@ -42,14 +52,7 @@ module.exports = {
     },
 
     updateById: (req, res, next) => {
-        const task = {};
-        req.body.name ? task.name = req.body.name : '';
-        req.body.description ? task.description = req.body.description : '';
-        models.Task.update(task, {
-                where: {
-                    id: req.params.id
-                }
-            })
+        modelsHelper.updateTaskFromRequest(req)
             .then(result => {
                 res.status(200).send({
                     message: 'Task was updated'
@@ -58,6 +61,7 @@ module.exports = {
             .catch(err => {
                 next(err);
             });
+
     },
 
     removeById: (req, res, next) => {
