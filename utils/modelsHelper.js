@@ -41,12 +41,12 @@ module.exports = {
             for (let i = 0; i < request.body.tags.length; i++) {
                 arr[i] = getTag(request.body.tags[i]);
             }
-            Promise.all(arr).then(tags => {
+            return Promise.all(arr).then(tags => {
                 tags.forEach(tag => {
                     task.addTag(tag);
                 });
+                return task;
             })
-            return task;
         })
     },
 
@@ -63,15 +63,14 @@ module.exports = {
 }
 
 function getTag(tagName) {
-    return tagsController.findByCriteria({
-            name: tagName
-        })
+    return tagsController.findByName(tagName)
         .then(tag => {
             if (!tag) {
                 return tagsController.create(tagName)
             }
             return tag;
-        }).catch(err => {
-            console.error(err);
+        })
+        .catch(err => {
+            throw new Error(err.message);
         });
 }

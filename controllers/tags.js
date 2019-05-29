@@ -9,10 +9,10 @@ module.exports = {
         return models.Tag.findAll();
     },
 
-    findByCriteria: (criteria) => {
+    findByName: (name) => {
         return models.Tag.findOne({
             where: {
-                criteria
+                name
             }
         });
     },
