@@ -28,6 +28,10 @@ module.exports = {
     },
 
     list: (req, res, next) => {
+        if (req.query.completed !== undefined) {
+            let completed = JSON.parse(req.query.completed);
+            return getList(completed, req, res, next);
+        }
         models.Task.findAll({
                 where: {
                     userId: req.user.id
@@ -127,20 +131,29 @@ module.exports = {
     },
 
     completedList: (req, res, next) => {
-        models.Task.findAll({
-                where: {
-                    completed: true
-                },
-                include: [{
-                    model: models.Tag,
-                    as: 'tags'
-                }]
-            })
-            .then(tasks => {
-                res.status(200).send(tasks);
-            })
-            .catch(err => {
-                next(err);
-            });
+        getList(true, req, res, next);
+    },
+
+    activeList: (req, res, next) => {
+        getList(false, req, res, next);
     }
+}
+
+function getList(completed, req, res, next) {
+    models.Task.findAll({
+            where: {
+                completed,
+                userId: req.user.id
+            },
+            include: [{
+                model: models.Tag,
+                as: 'tags',
+                attributes: ["id", "name"],
+                through: {
+                    attributes: []
+                }
+            }]
+        })
+        .then(tasks => res.status(200).send(tasks))
+        .catch(err => next(err));
 }
